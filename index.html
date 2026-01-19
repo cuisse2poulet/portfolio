@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio — Vos œuvres</title>
+  <meta name="description" content="Portfolio statique pour dessins, créations numériques et photos."/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="header-content">
+      <h1>Mon Portfolio</h1>
+      <p class="lead">Découvrez mon univers à travers mes dessins, mes créations numériques et mes modèles 3D.</p>
+      <a href="mailto:votre.email@example.com" class="contact-btn">Me contacter</a>
+    </div>
+    <div class="logo-placeholder">M</div>
+  </header>
+
+  <div class="filters" id="filtersContainer"></div>
+  <section class="gallery-grid" id="galleryGrid"></section>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="close-btn" id="lbClose">&times;</button>
+
+  <div class="lb-content">
+
+    <div class="lb-media-wrapper">
+      <button class="lb-btn prev-btn" id="lbPrev">&#10094;</button>
+
+      <img src="" alt="" id="lbImg">
+
+      <iframe
+        id="lbFrame"
+        src=""
+        frameborder="0"
+        allow="autoplay; fullscreen; xr-spatial-tracking"
+        mozallowfullscreen="true"
+        webkitallowfullscreen="true"
+        execution-while-out-of-viewport
+        execution-while-not-rendered
+        web-share
+      ></iframe>
+
+      <button class="lb-btn next-btn" id="lbNext">&#10095;</button>
+    </div>
+
+    <div class="lb-info">
+      <button id="lbPlayPause" class="play-pause-btn">⏸ Pause</button>
+      <h3 id="lbTitle"></h3>
+      <p id="lbDesc"></p>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>

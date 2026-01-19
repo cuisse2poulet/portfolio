@@ -1,0 +1,467 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+  --bg: #0f1724;
+  --surface: #1e293b;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --accent: #38bdf8; /* Cyan Blue */
+  --accent-hover: #0ea5e9;
+
+  --radius: 12px;
+  --max-width: 1200px;
+  --header-height: 80px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 40px 20px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: var(--max-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* =========================================
+   2. HEADER SECTION
+   ========================================= */
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+@media(min-width: 768px) {
+  header {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .header-content {
+    max-width: 65%;
+  }
+}
+
+h1 {
+  margin: 0 0 12px 0;
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: -0.05em;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p.lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.contact-btn {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 28px;
+  border-radius: 99px;
+  background: var(--accent);
+  color: #0f1724;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.contact-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.4);
+}
+
+/* Logo Styling */
+.logo-placeholder {
+  width: 80px;
+  height: 80px;
+  background: var(--surface);
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--accent);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* =========================================
+   3. FILTERS (CHIPS)
+   ========================================= */
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 24px;
+}
+
+.filters button {
+  padding: 8px 20px;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.filters button:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.filters button.active {
+  background: var(--accent);
+  color: #0f1724;
+  border-color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+/* =========================================
+   4. GALLERY GRID
+   ========================================= */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+  min-height: 300px;
+  transition: opacity 0.3s ease;
+}
+
+/* Card Base */
+.card {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+  aspect-ratio: 4/3;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Card Image */
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+  display: block;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+/* Card Overlay (Gradient) */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 36, 0.98) 0%,
+    rgba(15, 23, 36, 0.6) 40%,
+    rgba(15, 23, 36, 0) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .card-overlay {
+  opacity: 1;
+}
+
+/* Overlay Text Animation */
+.card-overlay h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  transform: translateY(20px);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.card-overlay p {
+  margin: 6px 0 0 0;
+  font-size: 0.9rem;
+  color: var(--muted); /* More subtle text in grid */
+  transform: translateY(20px);
+  transition: transform 0.3s var(--ease-out) 0.05s; /* Slight delay */
+  line-height: 1.4;
+}
+
+.card:hover .card-overlay h3,
+.card:hover .card-overlay p {
+  transform: translateY(0);
+}
+
+/* =========================================
+   5. LIGHTBOX OVERLAY
+   ========================================= */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 8, 16, 0.96);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  padding: 20px;
+}
+
+.lightbox.open {
+  display: flex;
+  animation: fadeIn 0.3s forwards;
+}
+
+/* Content Container */
+.lb-content {
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- NEW: Media Wrapper (Groups Image + Arrows) --- */
+/* This is crucial for keeping arrows close to the image */
+.lb-media-wrapper {
+  position: relative;
+  display: inline-flex; /* Shrinks to fit content */
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+/* Lightbox Image */
+.lb-media-wrapper img {
+  max-width: 100%;
+  max-height: 65vh; /* Leaves room for text below */
+  width: auto;
+  border-radius: 4px;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  display: block;
+}
+
+/* Lightbox Iframe (3D) */
+#lbFrame {
+  display: none;
+  width: 80vw;
+  height: 60vh;
+  max-width: 1000px;
+  max-height: 65vh;
+  border-radius: 8px;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+  background: #000;
+}
+
+/* =========================================
+   6. LIGHTBOX CONTROLS (Arrows & Close)
+   ========================================= */
+/* Common Arrow Style */
+.lb-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+.lb-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%) scale(1.1);
+  border-color: white;
+}
+
+/* Position relative to the .lb-media-wrapper */
+.prev-btn { left: -80px; }
+.next-btn { right: -80px; }
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: none;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 1001;
+}
+
+.close-btn:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+/* =========================================
+   7. LIGHTBOX INFO AREA
+   ========================================= */
+.lb-info {
+  text-align: center;
+  margin-top: 24px;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  animation: slideUp 0.3s ease-out;
+}
+
+.lb-info h3 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Description in Lightbox */
+#lbDesc {
+  margin: 10px 0 0 0;
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Play/Pause Button */
+.play-pause-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 20px;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  margin-bottom: 16px; /* Space between button and Title */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.play-pause-btn:hover {
+  background: var(--accent);
+  color: #0f1724;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2);
+}
+
+/* =========================================
+   8. ANIMATIONS & RESPONSIVE
+   ========================================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tablet & Mobile Tweaks */
+@media(max-width: 1024px) {
+  .prev-btn { left: -60px; }
+  .next-btn { right: -60px; }
+}
+
+@media(max-width: 768px) {
+  /* Header */
+  .header-content { max-width: 100%; }
+  h1 { font-size: 2rem; }
+
+  /* Lightbox */
+  .lb-content img { max-height: 50vh; }
+  #lbFrame { height: 40vh; }
+
+  /* Force arrows inside the image on mobile */
+  .prev-btn {
+    left: 10px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    width: 44px; height: 44px;
+  }
+  .next-btn {
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    width: 44px; height: 44px;
+  }
+
+  .close-btn {
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+  }
+
+  .lb-info h3 { font-size: 1.25rem; }
+  #lbDesc { font-size: 0.9rem; }
+}
