@@ -95,6 +95,25 @@ p.lead {
   box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.4);
 }
 
+.minecraft-btn {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 28px;
+  border-radius: 99px;
+  background: #FF784D;
+  color: #0f1724;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.minecraft-btn:hover {
+  background: #f56134;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px #f3501e;
+}
+
 /* Logo Styling */
 .logo-placeholder {
   width: 80px;
@@ -109,6 +128,7 @@ p.lead {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 
 /* =========================================
    3. FILTERS (CHIPS)
@@ -147,6 +167,17 @@ p.lead {
   border-color: var(--accent);
   font-weight: 600;
   box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+button span {
+  font-size: 0.8em;
+  opacity: 0.6;
+  margin-left: 5px;
+}
+
+button.active span {
+  opacity: 1;
+  font-weight: bold;
 }
 
 /* =========================================

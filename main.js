@@ -55,6 +55,7 @@ async function fetchSketchfabThumbnails() {
 
 // --- Rendering ---
 function renderFilters() {
+
   let html = `<button class="active" onclick="filterGallery('all')">Tous</button>`;
   categories.forEach(cat => {
     html += `<button onclick="filterGallery('${cat.id}')">${cat.label}</button>`;
@@ -62,8 +63,43 @@ function renderFilters() {
   filtersContainer.innerHTML = html;
 }
 
+function renderFilters()
+{
+// 1. Calculate count for "portfolioItems"
+  const totalCount = portfolioItems.length;
+
+  let html = `
+    <button class="active" onclick="filterGallery('all')">
+      Tous <span>(${totalCount})</span>
+    </button>
+  `;
+
+  // 2. Loop through categories and calculate specific counts
+  categories.forEach(cat => {
+    const count = portfolioItems.filter(item => item.category === cat.id).length;
+
+    html += `
+      <button onclick="filterGallery('${cat.id}')">
+        ${cat.label} <span>(${count})</span>
+      </button>
+    `;
+  });
+
+  filtersContainer.innerHTML = html;
+}
+
 function renderGallery(items) {
-  galleryGrid.innerHTML = items.map(item => {
+  // 1. Sort the items based on the order of the categories array
+  const sortedItems = [...items].sort((a, b) => {
+    const indexA = categories.findIndex(cat => cat.id === a.category);
+    const indexB = categories.findIndex(cat => cat.id === b.category);
+
+    // If a category isn't found, it gets pushed to the end
+    return indexA - indexB;
+  });
+
+  // 2. Map through the SORTED items
+  galleryGrid.innerHTML = sortedItems.map(item => {
     const subText = item.desc || categories.find(c => c.id === item.category)?.label || '';
     const altText = item.desc ? `${item.title} — ${item.desc}` : item.title;
 
