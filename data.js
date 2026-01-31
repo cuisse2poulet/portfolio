@@ -1,9 +1,10 @@
 // data.js
-const SLIDESHOW_SPEED = 2000; // Time in ms between images
-const GRID_COLUMNS    = 6;    // Grid width
+const SLIDESHOW_SPEED = 2000; //  Time in ms between images
+const GRID_COLUMNS    = 4;    //  Grid width
+const ITEMS_PER_PAGE  = 48;   //  Limits initial DOM nodes
 
 const categories = [
-  { id: 'photos'     , label: 'Photographie' },
+  { id: 'photos'     , label: 'Photographie'},
   { id: '3d'         , label: 'Modèles 3D' },
   { id: 'archi'      , label: 'Architecture' },
   { id: 'charadesign', label: 'Chara Design' },
@@ -12,11 +13,21 @@ const categories = [
   { id: 'faces'      , label: 'Etudes - Visage' }
 ];
 
+const subCategories = {
+  'jojo': [
+    { id: 'stands', label: 'Stands' },
+    { id: 'characters', label: 'Personnages' }
+  ],
+  'photos': [
+    { id: 'animal', label: 'Animaux' },
+    { id: 'urban', label: 'Architecture' }
+  ]
+};
 const portfolioItems = [
   // --- ARCHITECTURE ---
   {
     src: 'assets/architecture/archi1.jpg',
-    category: 'archi',
+    category: 'drawings',
     title: 'Coin de Rue',
     desc: 'Etude de perspective - Crayon sur papier'
   },
@@ -25,6 +36,7 @@ const portfolioItems = [
     src: 'assets/jojo/wonder_of_u.jpg',
     category: 'jojo',
     title: 'Wonder Of U',
+    sub: 'stands',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
@@ -37,6 +49,7 @@ const portfolioItems = [
     src: 'assets/jojo/pesci.jpg',
     category: 'jojo',
     title: 'Pesci',
+    sub: 'characters',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
@@ -159,15 +172,71 @@ const portfolioItems = [
 
   // --- Photos ---
   {
-    src: 'assets/photo1.jpg',
+    src: 'assets/photos/animal/animal1.jpg',
     category: 'photos',
-    title: 'Paysage urbain',
-    desc: 'Paris, au petit matin.'
+    sub: 'animal',
+    title: 'Chat',
   },
   {
-    src: 'assets/photo2.jpg',
+    src: 'assets/photos/animal/animal2.jpg',
     category: 'photos',
-    title: 'Scène nocturne'
+    sub: 'animal',
+    title: 'Chat',
+  },
+  {
+    src: 'assets/photos/animal/animal3.jpg',
+    category: 'photos',
+    sub: 'animal',
+    title: 'Chat',
+  },
+  {
+    src: 'assets/photos/animal/animal4.jpg',
+    category: 'photos',
+    sub: 'animal',
+    title: 'Chat',
+  },
+  {
+    src: 'assets/photos/animal/animal5.jpg',
+    category: 'photos',
+    sub: 'animal',
+    title: 'Canard',
+  },
+  {
+    src: 'assets/photos/animal/animal6.jpg',
+    category: 'photos',
+    sub: 'animal',
+    title: 'Canard',
+  },
+
+  {
+    src: 'assets/photos/architecture/archi01.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi02.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi03.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi04.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi05.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
   },
 
   // --- 3D Models (Sketchfab) ---
