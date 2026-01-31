@@ -253,6 +253,36 @@ const portfolioItems = [
     sub: 'urban',
     title: 'ARCHI',
   },
+  {
+    src: 'assets/photos/architecture/archi06.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi07.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi08.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi09.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
+  {
+    src: 'assets/photos/architecture/archi10.jpg',
+    category: 'photos',
+    sub: 'urban',
+    title: 'ARCHI',
+  },
 
   // --- 3D Models (Sketchfab) ---
   {
