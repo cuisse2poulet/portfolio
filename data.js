@@ -1,7 +1,7 @@
 // data.js
 const SLIDESHOW_SPEED = 2000; //  Time in ms between images
 const GRID_COLUMNS    = 4;    //  Grid width
-const ITEMS_PER_PAGE  = 48;   //  Limits initial DOM nodes
+const ITEMS_PER_PAGE  = 16;   //  Limits initial DOM nodes
 
 const categories = [
   { id: 'photos'     , label: 'Photographie'},
