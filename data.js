@@ -4,23 +4,22 @@ const GRID_COLUMNS    = 4;    //  Grid width
 const ITEMS_PER_PAGE  = 16;   //  Limits initial DOM nodes
 
 const categories = [
-  { id: 'photos'     , label: 'Photographie'},
   { id: '3d'         , label: 'Modèles 3D' },
-  { id: 'archi'      , label: 'Architecture' },
-  { id: 'charadesign', label: 'Chara Design' },
-  { id: 'jojo'       , label: 'JoJo' },
+  { id: 'charadesign', label: 'CharaDesign' },
   { id: 'digital'    , label: 'Créations numériques' },
-  { id: 'faces'      , label: 'Etudes - Visage' }
+  { id: 'drawings'   , label: 'Dessins' },
+  { id: 'photos'     , label: 'Photographie'},
 ];
 
 const subCategories = {
-  'jojo': [
-    { id: 'stands', label: 'Stands' },
-    { id: 'characters', label: 'Personnages' }
-  ],
   'photos': [
     { id: 'animal', label: 'Animaux' },
     { id: 'urban', label: 'Architecture' }
+  ],
+  'drawings': [
+    { id: 'faces', label: 'Visages' },
+    { id: 'jojo', label: 'JoJo\'s' },
+    { id: 'archi', label: 'Architecture' }
   ]
 };
 const portfolioItems = [
@@ -28,50 +27,58 @@ const portfolioItems = [
   {
     src: 'assets/architecture/archi1.jpg',
     category: 'drawings',
+    sub: 'archi',
     title: 'Coin de Rue',
     desc: 'Etude de perspective - Crayon sur papier'
   },
   // --- JOJO ---
   {
     src: 'assets/jojo/wonder_of_u.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'Wonder Of U',
     sub: 'stands',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
     src: 'assets/jojo/killer_queen.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'Killer Queen',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
     src: 'assets/jojo/pesci.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'Pesci',
     sub: 'characters',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
     src: 'assets/jojo/white_snake.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'White Snake',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
     src: 'assets/jojo/silver_chariot.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'Silver Chariot',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
   {
     src: 'assets/jojo/polnareff.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'Jean-Pierre Polnareff',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },  {
     src: 'assets/jojo/soft_wet.jpg',
-    category: 'jojo',
+    category: 'drawings',
+    sub: 'jojo',
     title: 'Soft and Wet',
     desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
   },
@@ -109,49 +116,57 @@ const portfolioItems = [
   // --- VISAGES ---
   {
     src: 'assets/faces/faces1.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Etudes préliminaires pour visages',
     desc: 'Crayon sur papier'
   },
   {
     src: 'assets/faces/faces2.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Etudes préliminaires pour visages',
     desc: 'Crayon sur papier'
   },
   {
     src: 'assets/faces/faces3.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Etudes préliminaires pour visages',
     desc: 'Crayon sur papier'
   },
   {
     src: 'assets/faces/faces4.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Etudes préliminaires pour visages',
     desc: 'Crayon sur papier'
   },
   {
     src: 'assets/faces/face5.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Etudes préliminaires pour visages',
     desc: 'Crayon sur papier'
   },
 {
     src: 'assets/faces/skibidi_demon.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Skibidi Demon',
     desc: 'Feutre et peinture sur cadre toile'
   },
   {
     src: 'assets/faces/subway_surfer.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'Subway Surfer',
     desc: 'Feutre et peinture sur cadre toile'
   },
   {
     src: 'assets/faces/john_pork.jpg',
-    category: 'faces',
+    category: 'drawings',
+    sub: 'faces',
     title: 'John Pork',
     desc: 'Feutre et peinture sur cadre toile'
   },
