@@ -3,59 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portfolio — Vos œuvres</title>
-  <meta name="description" content="Portfolio statique pour dessins, créations numériques et photos."/>
-
+  <title>Portfolio — Gabriel FALCOU</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-
   <header>
     <div class="header-content">
       <h1>Gabriel FALCOU</h1>
       <p class="lead">Découvrez mon univers à travers mes photos, modèles 3D, créations numériques et mes dessins.</p>
-      <a href="mailto:gabriel.falcou@proton.me" class="contact-btn">Me contacter</a>
-      <a href="https://sketchfab.com/enorme_poulet" class="contact-btn">Mon SketchFab</a>
-      <a href="https://www.curseforge.com/members/en0rm3p0ul3t/projects" class="minecraft-btn">Mes Créations MineCraft</a>
+      <div class="actions">
+        <a href="mailto:gabriel.falcou@proton.me" class="contact-btn">Me contacter</a>
+        <a href="https://sketchfab.com/enorme_poulet" class="contact-btn">Mon SketchFab</a>
+        <a href="https://www.curseforge.com/members/en0rm3p0ul3t/projects" class="minecraft-btn">Mes Créations MineCraft</a>
+      </div>
     </div>
-    <div class="logo-placeholder"><img src="assets/profile.png"/></div>
+    <div class="logo-placeholder">
+      <img src="assets/profile.png" alt="Profile"/>
+    </div>
   </header>
 
-  <div class="filters" id="filtersContainer"></div>
-  <section class="gallery-grid" id="galleryGrid"></section>
+  <div class="filters" id="filtersContainer">
+    <button class="active" onclick="renderGallery('all')">Tout</button>
+    </div>
 
+  <section class="gallery-grid" id="galleryGrid"></section>
 </div>
 
 <div class="lightbox" id="lightbox">
-  <button class="close-btn" id="lbClose">&times;</button>
-
+  <button class="close-btn" id="lbClose" onclick="document.getElementById('lightbox').classList.remove('open')">&times;</button>
   <div class="lb-content">
-
     <div class="lb-media-wrapper">
       <button class="lb-btn prev-btn" id="lbPrev">&#10094;</button>
-
       <img src="" alt="" id="lbImg">
-
-      <iframe
-        id="lbFrame"
-        src=""
-        frameborder="0"
-        allow="autoplay; fullscreen; xr-spatial-tracking"
-        mozallowfullscreen="true"
-        webkitallowfullscreen="true"
-        execution-while-out-of-viewport
-        execution-while-not-rendered
-        web-share
-      ></iframe>
-
+      <iframe id="lbFrame" src="" frameborder="0"></iframe>
       <button class="lb-btn next-btn" id="lbNext">&#10095;</button>
     </div>
-
     <div class="lb-info">
-      <button id="lbPlayPause" class="play-pause-btn">⏸ Pause</button>
       <h3 id="lbTitle"></h3>
       <p id="lbDesc"></p>
     </div>

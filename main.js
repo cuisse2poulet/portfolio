@@ -1,249 +1,292 @@
-// --- DOM Elements ---
-const filtersContainer = document.getElementById('filtersContainer');
-const galleryGrid = document.getElementById('galleryGrid');
-const lightbox = document.getElementById('lightbox');
-const lbImg = document.getElementById('lbImg');
-const lbFrame = document.getElementById('lbFrame');
-const lbTitle = document.getElementById('lbTitle');
-const lbDesc = document.getElementById('lbDesc'); // NEW
-const lbPlayPause = document.getElementById('lbPlayPause');
-
-// --- Settings ---
-const SLIDESHOW_SPEED = 3000;
-
-// --- State ---
-let currentFilter = 'all';
-let filteredItems = [];
-let lightboxItems = [];
-let currentIdx = 0;
-let slideTimer = null;
+/* =========================================
+   1. GLOBAL STATE & SETTINGS
+   ========================================= */
+let currentIndex = 0;
 let isPlaying = false;
+let slideTimer = null;
+let currentFilter = 'all';
+let currentFilteredItems = [];
+let lightboxItems = [];
 
-// --- Initialization ---
+/* =========================================
+   2. INITIALIZATION
+   ========================================= */
 async function init() {
-  renderFilters();
-  await fetchSketchfabThumbnails();
-  filterGallery('all');
-  setupLightboxEvents();
+    if (typeof portfolioItems === 'undefined') return;
+    setupLightboxEvents();
+    await fetchSketchfabThumbnails();
+    renderFilters();
+    filterGallery('all');
 }
 
-// --- API Helper ---
+/* =========================================
+   3. API HELPER (Sketchfab Thumbnails)
+   ========================================= */
 async function fetchSketchfabThumbnails() {
-  const itemsToFetch = portfolioItems.filter(item => item.sketchfabId && !item.src);
-  if (itemsToFetch.length === 0) return;
+    const itemsToFetch = portfolioItems.filter(item => item.sketchfabId && !item.src);
+    if (itemsToFetch.length === 0) return;
 
-  const promises = itemsToFetch.map(async (item) => {
-    try {
-      let id = item.sketchfabId;
-      if (id.includes('sketchfab.com')) {
-        const parts = id.split('/').filter(p => p && p !== 'embed' && !p.includes('?'));
-        id = parts[parts.length - 1];
-      }
-      const response = await fetch(`https://api.sketchfab.com/v3/models/${id}`);
-      if (!response.ok) throw new Error('Network error');
-      const data = await response.json();
-      const bestImage = data.thumbnails.images.sort((a, b) => b.width - a.width)[0];
-      if (bestImage) item.src = bestImage.url;
-    } catch (error) {
-      console.warn(`Could not fetch thumbnail for ${item.title}`, error);
-      item.src = 'https://placehold.co/600x400?text=No+Preview';
-    }
-  });
-
-  await Promise.all(promises);
+    const promises = itemsToFetch.map(async (item) => {
+        try {
+            let id = item.sketchfabId;
+            if (id.includes('sketchfab.com')) {
+                const parts = id.split('/').filter(p => p && p !== 'embed' && !p.includes('?'));
+                id = parts[parts.length - 1];
+            }
+            const response = await fetch(`https://api.sketchfab.com/v3/models/${id}`);
+            const data = await response.json();
+            const bestImage = data.thumbnails.images.sort((a, b) => b.width - a.width)[0];
+            if (bestImage) item.src = bestImage.url;
+        } catch (error) {
+            item.src = 'https://placehold.co/600x400?text=No+Preview';
+        }
+    });
+    await Promise.all(promises);
 }
 
-// --- Rendering ---
+/* =========================================
+   4. RENDERING & FILTERING
+   ========================================= */
 function renderFilters() {
+    const container = document.getElementById('filtersContainer');
+    if (!container) return;
 
-  let html = `<button class="active" onclick="filterGallery('all')">Tous</button>`;
-  categories.forEach(cat => {
-    html += `<button onclick="filterGallery('${cat.id}')">${cat.label}</button>`;
-  });
-  filtersContainer.innerHTML = html;
+    const totalCount = portfolioItems.length;
+    let html = `<button class="active" onclick="filterGallery('all')">Tous <span>(${totalCount})</span></button>`;
+
+    categories.forEach(cat => {
+        const count = portfolioItems.filter(item => item.category === cat.id).length;
+        html += `<button onclick="filterGallery('${cat.id}')">${cat.label} <span>(${count})</span></button>`;
+    });
+    container.innerHTML = html;
 }
 
-function renderFilters()
-{
-// 1. Calculate count for "portfolioItems"
-  const totalCount = portfolioItems.length;
-
-  let html = `
-    <button class="active" onclick="filterGallery('all')">
-      Tous <span>(${totalCount})</span>
-    </button>
-  `;
-
-  // 2. Loop through categories and calculate specific counts
-  categories.forEach(cat => {
-    const count = portfolioItems.filter(item => item.category === cat.id).length;
-
-    html += `
-      <button onclick="filterGallery('${cat.id}')">
-        ${cat.label} <span>(${count})</span>
-      </button>
-    `;
-  });
-
-  filtersContainer.innerHTML = html;
-}
-
-function renderGallery(items) {
-  // 1. Sort the items based on the order of the categories array
-  const sortedItems = [...items].sort((a, b) => {
-    const indexA = categories.findIndex(cat => cat.id === a.category);
-    const indexB = categories.findIndex(cat => cat.id === b.category);
-
-    // If a category isn't found, it gets pushed to the end
-    return indexA - indexB;
-  });
-
-  // 2. Map through the SORTED items
-  galleryGrid.innerHTML = sortedItems.map(item => {
-    const subText = item.desc || categories.find(c => c.id === item.category)?.label || '';
-    const altText = item.desc ? `${item.title} — ${item.desc}` : item.title;
-
-    return `
-      <article class="card" onclick="openLightbox('${item.src}')">
-        <img src="${item.src}" alt="${altText}" loading="lazy">
-        <div class="card-overlay">
-          <h3>${item.title}</h3>
-          <p>${subText}</p>
-        </div>
-      </article>
-    `;
-  }).join('');
-}
-
-// --- Filtering ---
 window.filterGallery = function(filterId) {
-  currentFilter = filterId;
-  const buttons = filtersContainer.querySelectorAll('button');
-  buttons.forEach(btn => {
-    btn.classList.remove('active');
-    if(btn.textContent==='Tous' && filterId==='all') btn.classList.add('active');
-    const cat = categories.find(c => c.id === filterId);
-    if(cat && btn.textContent===cat.label) btn.classList.add('active');
-  });
+    currentFilter = filterId;
+    const buttons = document.querySelectorAll('#filtersContainer button');
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.includes('Tous') && filterId === 'all') btn.classList.add('active');
+        const cat = categories.find(c => c.id === filterId);
+        if (cat && btn.innerText.includes(cat.label)) btn.classList.add('active');
+    });
 
-  if (filterId === 'all') filteredItems = portfolioItems;
-  else filteredItems = portfolioItems.filter(item => item.category === filterId);
+    currentFilteredItems = filterId === 'all'
+        ? portfolioItems
+        : portfolioItems.filter(item => item.category === filterId);
 
-  renderGallery(filteredItems);
+    renderGalleryGrid(currentFilteredItems);
 };
 
-// --- Lightbox Logic ---
+function renderGalleryGrid(items) {
+    const mainContainer = document.getElementById('galleryGrid');
+    if (!mainContainer) return;
+    mainContainer.innerHTML = '';
+
+    // Inject the column count from data.js into a CSS variable
+    const columns = typeof GRID_COLUMNS !== 'undefined' ? GRID_COLUMNS : 4;
+    mainContainer.style.setProperty('--grid-cols', columns);
+
+    const grouped = items.reduce((acc, item) => {
+        if (!acc[item.category]) acc[item.category] = [];
+        acc[item.category].push(item);
+        return acc;
+    }, {});
+
+    categories.forEach(catDef => {
+        const itemsInSection = grouped[catDef.id];
+        if (itemsInSection && itemsInSection.length > 0) {
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'category-separator';
+            headerDiv.id = `scroll-target-${catDef.id}`;
+            headerDiv.innerHTML = `<h2>${catDef.label}</h2>`;
+            mainContainer.appendChild(headerDiv);
+
+            const subGrid = document.createElement('div');
+            subGrid.className = 'sub-grid';
+
+            itemsInSection.forEach((item) => {
+                const subText = item.desc || catDef.label || '';
+                const card = document.createElement('article');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${item.src}" alt="${item.title}" loading="lazy">
+                    <div class="card-overlay">
+                        <h3>${item.title}</h3>
+                        <p>${subText}</p>
+                    </div>
+                `;
+                card.onclick = () => openLightbox(item.src);
+                subGrid.appendChild(card);
+            });
+            mainContainer.appendChild(subGrid);
+        }
+    });
+
+    if (currentFilter !== 'all') {
+        const target = document.getElementById(`scroll-target-${currentFilter}`);
+        if (target) {
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    }
+}
+
+/* =========================================
+   5. LIGHTBOX & SLIDESHOW LOGIC
+   ========================================= */
 window.openLightbox = function(src) {
-  const clickedItem = portfolioItems.find(item => item.src === src);
-  if (!clickedItem) return;
+    const clickedItem = portfolioItems.find(item => item.src === src);
+    if (!clickedItem) return;
 
-  lightboxItems = portfolioItems.filter(item => item.category === clickedItem.category);
-  currentIdx = lightboxItems.findIndex(item => item.src === src);
+    lightboxItems = portfolioItems.filter(item => item.category === clickedItem.category);
+    currentIndex = lightboxItems.findIndex(item => item.src === src);
 
-  updateLightboxContent();
-  lightbox.classList.add('open');
+    updateLightboxContent();
+    const lb = document.getElementById('lightbox');
+    if (lb) lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
 
-  if (clickedItem.sketchfabId) {
-    stopSlideshow();
-    lbPlayPause.style.display = 'none';
-  } else {
-    startSlideshow();
-    lbPlayPause.style.display = 'flex';
-  }
+    if (!clickedItem.sketchfabId) {
+        startSlideshow();
+    } else {
+        stopSlideshow();
+    }
 };
 
 function closeLightbox() {
-  lightbox.classList.remove('open');
-  stopSlideshow();
-  lbFrame.src = "";
+    const lb = document.getElementById('lightbox');
+    if (lb) lb.classList.remove('open');
+    stopSlideshow();
+    const frame = document.getElementById('lbFrame');
+    if (frame) frame.src = "";
+    document.body.style.overflow = 'auto';
 }
 
 function updateLightboxContent() {
-  if(currentIdx < 0) return;
-  const item = lightboxItems[currentIdx];
+    if (currentIndex < 0) return;
+    const item = lightboxItems[currentIndex];
+    const total = lightboxItems.length;
 
-  lbTitle.textContent = item.title;
-  // UPDATED: Fill the description
-  lbDesc.textContent = item.desc || '';
+    const lbImg = document.getElementById('lbImg');
+    const lbFrame = document.getElementById('lbFrame');
 
-  if (item.sketchfabId) {
-    lbImg.style.display = 'none';
-    lbFrame.style.display = 'block';
+    // Displaying X / N wrapped in a span for CSS styling
+    document.getElementById('lbTitle').innerHTML = `${item.title} <span class="lb-counter">[${currentIndex + 1} / ${total}]</span>`;
+    document.getElementById('lbDesc').textContent = item.desc || '';
 
-    let id = item.sketchfabId;
-    if (id.includes('sketchfab.com')) {
-      const parts = id.split('/').filter(p => p && p !== 'embed' && !p.includes('?'));
-      id = parts[parts.length - 1];
+    if (item.sketchfabId) {
+        if (lbImg) lbImg.style.display = 'none';
+        if (lbFrame) {
+            lbFrame.style.display = 'block';
+            let id = item.sketchfabId;
+            if (id.includes('sketchfab.com')) {
+                const parts = id.split('/').filter(p => p && p !== 'embed' && !p.includes('?'));
+                id = parts[parts.length - 1];
+            }
+            lbFrame.src = `https://sketchfab.com/models/${id}/embed?autostart=1&ui_theme=dark&dnt=1`;
+        }
+        stopSlideshow();
+        updatePlayPauseUI();
+    } else {
+        if (lbFrame) { lbFrame.style.display = 'none'; lbFrame.src = ""; }
+        if (lbImg) {
+            lbImg.style.display = 'block';
+            lbImg.style.opacity = 0;
+            setTimeout(() => { lbImg.src = item.src; lbImg.style.opacity = 1; }, 150);
+        }
+        updatePlayPauseUI();
     }
-    lbFrame.src = `https://sketchfab.com/models/${id}/embed?autostart=1&ui_theme=dark&dnt=1`;
-
-    stopSlideshow();
-    lbPlayPause.style.display = 'none';
-  } else {
-    lbFrame.style.display = 'none';
-    lbFrame.src = "";
-    lbImg.style.display = 'block';
-    lbImg.style.opacity = 0;
-    setTimeout(() => {
-      lbImg.src = item.src;
-      lbImg.style.opacity = 1;
-    }, 150);
-    lbPlayPause.style.display = 'flex';
-  }
 }
 
-function nextSlide() {
-  currentIdx = (currentIdx + 1) % lightboxItems.length;
-  updateLightboxContent();
-}
+function nextSlide() { currentIndex = (currentIndex + 1) % lightboxItems.length; updateLightboxContent(); }
+function prevSlide() { currentIndex = (currentIndex - 1 + lightboxItems.length) % lightboxItems.length; updateLightboxContent(); }
 
-function prevSlide() {
-  currentIdx = (currentIdx - 1 + lightboxItems.length) % lightboxItems.length;
-  updateLightboxContent();
-}
-
-// --- Toggle Logic ---
 function startSlideshow() {
-  if (slideTimer) clearInterval(slideTimer);
-  isPlaying = true;
-  updatePlayPauseUI();
-  slideTimer = setInterval(() => { nextSlide(); }, SLIDESHOW_SPEED);
+    if (slideTimer) clearInterval(slideTimer);
+    isPlaying = true;
+    updatePlayPauseUI();
+
+    const speed = SLIDESHOW_SPEED || 3000;
+    slideTimer = setInterval(() => { nextSlide(); }, speed);
 }
 
 function stopSlideshow() {
-  if (slideTimer) { clearInterval(slideTimer); slideTimer = null; }
-  isPlaying = false;
-  updatePlayPauseUI();
+    if (slideTimer) { clearInterval(slideTimer); slideTimer = null; }
+    isPlaying = false;
+    updatePlayPauseUI();
 }
 
-function toggleSlideshow() {
-  if (isPlaying) stopSlideshow();
-  else startSlideshow();
-}
+window.toggleSlideshow = function() {
+    if (isPlaying) stopSlideshow();
+    else startSlideshow();
+};
 
 function updatePlayPauseUI() {
-  if (isPlaying) lbPlayPause.textContent = "⏸ Pause";
-  else lbPlayPause.textContent = "▶ Lecture";
+    let btn = document.getElementById('lbPlayPause');
+    const lbContent = document.querySelector('.lb-content');
+    const item = lightboxItems[currentIndex];
+
+    if (item && item.sketchfabId) {
+        if (btn) btn.parentElement.style.display = 'none';
+        return;
+    }
+
+    // Check for our dedicated centering wrapper
+    let controlLayer = document.getElementById('lbControlLayer');
+    if (!controlLayer && lbContent) {
+        controlLayer = document.createElement('div');
+        controlLayer.id = 'lbControlLayer';
+        // Position it at the very top of the content
+        lbContent.prepend(controlLayer);
+    }
+
+    if (!btn && controlLayer && item && !item.sketchfabId) {
+        btn = document.createElement('button');
+        btn.id = 'lbPlayPause';
+        btn.className = 'play-pause-btn';
+        controlLayer.appendChild(btn);
+        btn.onclick = (e) => { e.stopPropagation(); toggleSlideshow(); };
+    }
+
+    if (btn) {
+        btn.innerHTML = isPlaying ? "⏸ Pause" : "▶ Lecture";
+        controlLayer.style.display = 'flex';
+        btn.style.setProperty('display', 'inline-flex', 'important');
+    }
 }
 
-// --- Events ---
+/* =========================================
+   6. EVENTS
+   ========================================= */
 function setupLightboxEvents() {
-  document.getElementById('lbClose').onclick = closeLightbox;
-  lightbox.onclick = (e) => { if(e.target === lightbox) closeLightbox(); };
-  lbPlayPause.onclick = (e) => { e.stopPropagation(); toggleSlideshow(); };
-  lbImg.onclick = (e) => { e.stopPropagation(); toggleSlideshow(); };
-  document.getElementById('lbPrev').onclick = (e) => { e.stopPropagation(); prevSlide(); };
-  document.getElementById('lbNext').onclick = (e) => { e.stopPropagation(); nextSlide(); };
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
 
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === ' ') {
-        if(lbFrame.style.display === 'none') { e.preventDefault(); toggleSlideshow(); }
+    if (document.getElementById('lbClose')) document.getElementById('lbClose').onclick = closeLightbox;
+    if (lb) lb.onclick = (e) => { if (e.target === lb) closeLightbox(); };
+
+    if (lbImg) {
+        lbImg.onclick = (e) => {
+            e.stopPropagation();
+            toggleSlideshow();
+        };
     }
-    if (e.key === 'ArrowLeft') prevSlide();
-    if (e.key === 'ArrowRight') nextSlide();
-  });
+
+    if (document.getElementById('lbPrev')) document.getElementById('lbPrev').onclick = (e) => { e.stopPropagation(); stopSlideshow(); prevSlide(); };
+    if (document.getElementById('lbNext')) document.getElementById('lbNext').onclick = (e) => { e.stopPropagation(); stopSlideshow(); nextSlide(); };
+
+    document.addEventListener('keydown', (e) => {
+        if (!lb || !lb.classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === ' ') {
+            const frame = document.getElementById('lbFrame');
+            if (frame && frame.style.display === 'none') { e.preventDefault(); toggleSlideshow(); }
+        }
+        if (e.key === 'ArrowLeft') { stopSlideshow(); prevSlide(); }
+        if (e.key === 'ArrowRight') { stopSlideshow(); nextSlide(); }
+    });
 }
 
 init();

@@ -2,11 +2,11 @@
    1. VARIABLES & RESET
    ========================================= */
 :root {
-  --bg: #0f1724;
+  --bg-pattern-base: #0a0f18;
   --surface: #1e293b;
   --text: #f1f5f9;
   --muted: #94a3b8;
-  --accent: #38bdf8; /* Cyan Blue */
+  --accent: #38bdf8;
   --accent-hover: #0ea5e9;
 
   --radius: 12px;
@@ -23,23 +23,37 @@
 
 body {
   margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
-  background: var(--bg);
   color: var(--text);
-  padding: 40px 20px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
 
-.container {
-  max-width: var(--max-width);
-  width: 100%;
-  margin: 0 auto;
+  /* REPEATING TILE BACKGROUND */
+  background-color: var(--bg-pattern-base);
+  background-image: url('assets/tile.png');
+  background-repeat: repeat;
+  background-size: 150px;
+
+  /* Space around the main box */
+  padding: 60px 20px;
 }
 
 /* =========================================
-   2. HEADER SECTION
+   2. MAIN CONTENT BOX (The Solid Container)
    ========================================= */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  background: var(--surface);
+  padding: 60px;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 0 1px rgba(255, 255, 255, 0.05);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
 header {
   display: flex;
   flex-direction: column;
@@ -62,9 +76,9 @@ header {
 h1 {
   margin: 0 0 12px 0;
   font-weight: 800;
-  font-size: 2.5rem;
+  font-size: 3rem;
   letter-spacing: -0.05em;
-  background: linear-gradient(to right, #fff, #94a3b8);
+  background: linear-gradient(to right, #ffffff, #94a3b8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -86,7 +100,7 @@ p.lead {
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .contact-btn:hover {
@@ -105,33 +119,37 @@ p.lead {
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
 }
 
 .minecraft-btn:hover {
   background: #f56134;
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px #f3501e;
+  box-shadow: 0 10px 15px -3px rgba(243, 80, 30, 0.4);
 }
 
-/* Logo Styling */
 .logo-placeholder {
-  width: 80px;
-  height: 80px;
-  background: var(--surface);
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  font-size: 2rem;
-  color: var(--accent);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 120px;
+  height: 120px;
+  background: #0f1724;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
 }
 
+.logo-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 /* =========================================
-   3. FILTERS (CHIPS)
+   3. FILTERS (CHIPS) & COUNTS
    ========================================= */
 .filters {
   display: flex;
@@ -143,7 +161,7 @@ p.lead {
 }
 
 .filters button {
-  padding: 8px 20px;
+  padding: 10px 22px;
   border-radius: 99px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: transparent;
@@ -153,6 +171,15 @@ p.lead {
   font-weight: 500;
   font-size: 0.95rem;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.filters button span {
+  margin-left: 8px;
+  font-size: 0.85em;
+  opacity: 0.5;
+  font-weight: 400;
 }
 
 .filters button:hover {
@@ -166,47 +193,63 @@ p.lead {
   color: #0f1724;
   border-color: var(--accent);
   font-weight: 600;
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
 }
 
-button span {
-  font-size: 0.8em;
-  opacity: 0.6;
-  margin-left: 5px;
-}
-
-button.active span {
-  opacity: 1;
-  font-weight: bold;
+.filters button.active span {
+  opacity: 0.8;
 }
 
 /* =========================================
-   4. GALLERY GRID
+   4. GROUPED 4xN GALLERY GRID
    ========================================= */
 .gallery-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.category-separator {
+  margin-bottom: -10px;
+  padding-left: 20px;
+  border-left: 4px solid var(--accent);
+  scroll-margin-top: 100px;
+}
+
+.category-separator h2 {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin: 0;
+  font-weight: 700;
+}
+
+.sub-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 28px;
-  min-height: 300px;
-  transition: opacity 0.3s ease;
+  /* Uses the variable from JS, defaults to 4 if not set */
+  grid-template-columns: repeat(var(--grid-cols, 4), 1fr);
+  gap: 24px;
 }
 
 /* Card Base */
 .card {
   position: relative;
-  background: var(--surface);
+  background: #0f1724;
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
-  aspect-ratio: 4/3;
+  transition: transform 0.4s var(--ease-out),
+              box-shadow 0.4s var(--ease-out),
+              border-color 0.4s var(--ease-out);
+  aspect-ratio: 1 / 1;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
 /* Card Image */
@@ -219,17 +262,17 @@ button.active span {
 }
 
 .card:hover img {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
-/* Card Overlay (Gradient) */
+/* Card Overlay */
 .card-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(15, 23, 36, 0.98) 0%,
-    rgba(15, 23, 36, 0.6) 40%,
+    rgba(15, 23, 36, 0.95) 0%,
+    rgba(15, 23, 36, 0.4) 50%,
     rgba(15, 23, 36, 0) 100%
   );
   display: flex;
@@ -244,23 +287,21 @@ button.active span {
   opacity: 1;
 }
 
-/* Overlay Text Animation */
 .card-overlay h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: white;
-  transform: translateY(20px);
+  transform: translateY(15px);
   transition: transform 0.3s var(--ease-out);
 }
 
 .card-overlay p {
-  margin: 6px 0 0 0;
+  margin: 5px 0 0 0;
   font-size: 0.9rem;
-  color: var(--muted); /* More subtle text in grid */
-  transform: translateY(20px);
-  transition: transform 0.3s var(--ease-out) 0.05s; /* Slight delay */
-  line-height: 1.4;
+  color: var(--muted);
+  transform: translateY(15px);
+  transition: transform 0.3s var(--ease-out) 0.05s;
 }
 
 .card:hover .card-overlay h3,
@@ -273,14 +314,17 @@ button.active span {
    ========================================= */
 .lightbox {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(5, 8, 16, 0.96);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  padding: 20px;
+  background: rgba(5, 8, 16, 0.98);
+  backdrop-filter: blur(15px);
+  z-index: 2000;
+  padding: 40px;
 }
 
 .lightbox.open {
@@ -288,55 +332,46 @@ button.active span {
   animation: fadeIn 0.3s forwards;
 }
 
-/* Content Container */
 .lb-content {
   position: relative;
-  max-width: 1200px;
   width: 100%;
-  max-height: 95vh;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-/* --- NEW: Media Wrapper (Groups Image + Arrows) --- */
-/* This is crucial for keeping arrows close to the image */
 .lb-media-wrapper {
   position: relative;
-  display: inline-flex; /* Shrinks to fit content */
+  display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 100%;
+  width: 100%;
+  min-height: 200px;
 }
 
-/* Lightbox Image */
-.lb-media-wrapper img {
-  max-width: 100%;
-  max-height: 65vh; /* Leaves room for text below */
-  width: auto;
-  border-radius: 4px;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  display: block;
-}
-
-/* Lightbox Iframe (3D) */
+.lb-media-wrapper img,
 #lbFrame {
-  display: none;
-  width: 80vw;
-  height: 60vh;
-  max-width: 1000px;
+  max-width: 100%;
   max-height: 65vh;
   border-radius: 8px;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
-  background: #000;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+  display: block;
+  cursor: pointer;
+  transition: opacity 0.15s ease-in-out;
 }
 
-/* =========================================
-   6. LIGHTBOX CONTROLS (Arrows & Close)
-   ========================================= */
-/* Common Arrow Style */
+#lbFrame {
+  width: 85vw;
+  height: 60vh;
+  max-width: 1000px;
+  background: #000;
+  border: none;
+  cursor: default;
+}
+
+/* Navigation Buttons */
 .lb-btn {
   position: absolute;
   top: 50%;
@@ -344,42 +379,42 @@ button.active span {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   transition: all 0.2s ease;
-  backdrop-filter: blur(4px);
   z-index: 10;
+  backdrop-filter: blur(5px);
 }
 
 .lb-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--accent);
+  color: #0f1724;
+  border-color: var(--accent);
   transform: translateY(-50%) scale(1.1);
-  border-color: white;
 }
 
-/* Position relative to the .lb-media-wrapper */
 .prev-btn { left: -80px; }
 .next-btn { right: -80px; }
 
 /* Close Button */
 .close-btn {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: -60px;
+  right: 0;
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
   border: none;
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 1;
   cursor: pointer;
-  transition: color 0.2s;
-  z-index: 1001;
+  transition: all 0.2s;
+  z-index: 2001;
 }
 
 .close-btn:hover {
@@ -388,65 +423,82 @@ button.active span {
 }
 
 /* =========================================
-   7. LIGHTBOX INFO AREA
+   6. LIGHTBOX INFO AREA & PLAY PAUSE
    ========================================= */
 .lb-info {
   text-align: center;
-  margin-top: 24px;
+  margin-top: 30px;
   color: var(--text);
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 700px;
-  animation: slideUp 0.3s ease-out;
+  max-width: 800px;
+  animation: slideUp 0.4s ease-out;
 }
 
 .lb-info h3 {
   margin: 0;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   letter-spacing: -0.02em;
 }
 
-/* Description in Lightbox */
-#lbDesc {
-  margin: 10px 0 0 0;
-  font-size: 1rem;
+.lb-info p {
+  margin: 12px 0 0 0;
+  font-size: 1.1rem;
   color: var(--muted);
   line-height: 1.6;
 }
 
-/* Play/Pause Button */
-.play-pause-btn {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--muted);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 8px 20px;
-  border-radius: 99px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-  margin-bottom: 16px; /* Space between button and Title */
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.lb-counter {
+    font-size: 0.6em;          /* Slightly smaller than title */
+    color: var(--muted);      /* Use your muted grey variable */
+    font-weight: 400;         /* Lighter weight than the bold title */
+    margin-left: 8px;         /* Give it some breathing room */
+    vertical-align: middle;
+    letter-spacing: 0.05em;
 }
 
-.play-pause-btn:hover {
-  background: var(--accent);
-  color: #0f1724;
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2);
+/* Centering wrapper to prevent the button from moving left */
+#lbControlLayer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Space between button and image */
+    pointer-events: none; /* Let clicks pass through the wrapper itself */
+}
+
+#lbPlayPause {
+    position: relative;
+    pointer-events: auto; /* Re-enable clicks for the button */
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+
+    /* Style consistency */
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 10px 24px;
+    border-radius: 99px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.2s;
+}
+
+/* Ensure hover doesn't trigger a layout shift */
+#lbPlayPause:hover {
+    background: var(--accent) !important;
+    color: #0f1724 !important;
+    transform: none; /* Remove any transform that might cause "jumps" */
 }
 
 /* =========================================
-   8. ANIMATIONS & RESPONSIVE
+   7. ANIMATIONS & RESPONSIVE
    ========================================= */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -454,45 +506,36 @@ button.active span {
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Tablet & Mobile Tweaks */
-@media(max-width: 1024px) {
+/* Responsive Overrides */
+@media(max-width: 1300px) {
   .prev-btn { left: -60px; }
   .next-btn { right: -60px; }
 }
 
+@media(max-width: 1024px) {
+  .container { padding: 40px; }
+  .sub-grid { grid-template-columns: repeat(3, 1fr); }
+  .prev-btn { left: 20px; background: rgba(0,0,0,0.6); }
+  .next-btn { right: 20px; background: rgba(0,0,0,0.6); }
+  .lb-media-wrapper img { max-height: 55vh; }
+}
+
 @media(max-width: 768px) {
-  /* Header */
-  .header-content { max-width: 100%; }
-  h1 { font-size: 2rem; }
-
-  /* Lightbox */
-  .lb-content img { max-height: 50vh; }
-  #lbFrame { height: 40vh; }
-
-  /* Force arrows inside the image on mobile */
-  .prev-btn {
-    left: 10px;
-    background: rgba(0,0,0,0.6);
-    border: none;
-    width: 44px; height: 44px;
+  body { padding: 0; }
+  .container {
+    padding: 30px 20px;
+    border-radius: 0;
   }
-  .next-btn {
-    right: 10px;
-    background: rgba(0,0,0,0.6);
-    border: none;
-    width: 44px; height: 44px;
-  }
+  .sub-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  h1 { font-size: 2.25rem; }
+  .close-btn { top: 15px; right: 15px; font-size: 2.5rem; }
+  .lb-info h3 { font-size: 1.4rem; }
+}
 
-  .close-btn {
-    top: 15px;
-    right: 15px;
-    font-size: 2rem;
-  }
-
-  .lb-info h3 { font-size: 1.25rem; }
-  #lbDesc { font-size: 0.9rem; }
+@media(max-width: 480px) {
+  .sub-grid { grid-template-columns: 1fr; }
 }

@@ -1,15 +1,67 @@
 // data.js
+const SLIDESHOW_SPEED = 2000; // Time in ms between images
+const GRID_COLUMNS    = 6;    // Grid width
 
 const categories = [
   { id: 'photos'     , label: 'Photographie' },
   { id: '3d'         , label: 'Modèles 3D' },
-  { id: 'digital'    , label: 'Créations numériques' },
+  { id: 'archi'      , label: 'Architecture' },
   { id: 'charadesign', label: 'Chara Design' },
-  { id: 'faces'      , label: 'Etudes - Visage' },
-  { id: 'genz'       , label: 'Série Gen Z' }
+  { id: 'jojo'       , label: 'JoJo' },
+  { id: 'digital'    , label: 'Créations numériques' },
+  { id: 'faces'      , label: 'Etudes - Visage' }
 ];
 
 const portfolioItems = [
+  // --- ARCHITECTURE ---
+  {
+    src: 'assets/architecture/archi1.jpg',
+    category: 'archi',
+    title: 'Coin de Rue',
+    desc: 'Etude de perspective - Crayon sur papier'
+  },
+  // --- JOJO ---
+  {
+    src: 'assets/jojo/wonder_of_u.jpg',
+    category: 'jojo',
+    title: 'Wonder Of U',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },
+  {
+    src: 'assets/jojo/killer_queen.jpg',
+    category: 'jojo',
+    title: 'Killer Queen',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },
+  {
+    src: 'assets/jojo/pesci.jpg',
+    category: 'jojo',
+    title: 'Pesci',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },
+  {
+    src: 'assets/jojo/white_snake.jpg',
+    category: 'jojo',
+    title: 'White Snake',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },
+  {
+    src: 'assets/jojo/silver_chariot.jpg',
+    category: 'jojo',
+    title: 'Silver Chariot',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },
+  {
+    src: 'assets/jojo/polnareff.jpg',
+    category: 'jojo',
+    title: 'Jean-Pierre Polnareff',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },  {
+    src: 'assets/jojo/soft_wet.jpg',
+    category: 'jojo',
+    title: 'Soft and Wet',
+    desc: 'Inspiré par Hirohiko Araki - Feutre sur papier'
+  },
   // --- CHARA DESIGN ---
   {
     src: 'assets/charadesign/music_spirit.jpg',
@@ -41,26 +93,6 @@ const portfolioItems = [
     title: 'Zéro G',
     desc: 'Etude de pose - Crayon sur papier'
   },
-  // --- GEN Z ---
-  {
-    src: 'assets/genz/skibidi_demon.jpg',
-    category: 'genz',
-    title: 'Skibidi Demon',
-    desc: 'Feutre et peinture sur cadre toile'
-  },
-  {
-    src: 'assets/genz/subway_surfer.jpg',
-    category: 'genz',
-    title: 'Subway Surfer',
-    desc: 'Feutre et peinture sur cadre toile'
-  },
-  {
-    src: 'assets/genz/john_pork.jpg',
-    category: 'genz',
-    title: 'John Pork',
-    desc: 'Feutre et peinture sur cadre toile'
-  },
-
   // --- VISAGES ---
   {
     src: 'assets/faces/faces1.jpg',
@@ -91,6 +123,24 @@ const portfolioItems = [
     category: 'faces',
     title: 'Etudes préliminaires pour visages',
     desc: 'Crayon sur papier'
+  },
+{
+    src: 'assets/faces/skibidi_demon.jpg',
+    category: 'faces',
+    title: 'Skibidi Demon',
+    desc: 'Feutre et peinture sur cadre toile'
+  },
+  {
+    src: 'assets/faces/subway_surfer.jpg',
+    category: 'faces',
+    title: 'Subway Surfer',
+    desc: 'Feutre et peinture sur cadre toile'
+  },
+  {
+    src: 'assets/faces/john_pork.jpg',
+    category: 'faces',
+    title: 'John Pork',
+    desc: 'Feutre et peinture sur cadre toile'
   },
 
   // --- Digital ---
